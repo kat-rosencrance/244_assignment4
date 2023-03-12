@@ -37,7 +37,7 @@ oil_spills <- read_csv(here("data", "Oil_Spill_Incident_Tracking_[ds394].csv")) 
 ### CRS
 ca_counties_sf %>% st_crs() ### EPSG 3857, WGS 84
 
-oil_spills %>% st_as_sf(coords=c("x","y"))
+oil_spills %>% st_as_sf(oil_spills, coords=c("longitude","latitude"), crs = 3857)
 
 st_crs(oil_spills) <- 3857
 
