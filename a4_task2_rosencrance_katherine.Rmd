@@ -1,0 +1,70 @@
+---
+title: 'Assignment 4 Task 2: Willamette Falls Fish Passage Time Series'
+author: "Katherine Rosencrance"
+date: "2023-03-12"
+output:
+  html_document:
+    theme: sandstone
+    code_folding: show
+---
+# Overview {.tabset}
+
+This report will explore fish passage data from 2001-01-01 to 2010-12-31 at the Willamette Falls fish ladder in Oregon. Data were shared and accessed from Columbia River DART. The Oregon Department of Fish and Wildlife (ODFW) mans a station at the falls where fish counts are recorded every day, 24 hours a day. This report will specifically look at time series, seasonal plots, and total counts for steelhead, coho, and coho jack salmon. 
+
+**Data Citation:** Columbia Basin Research, University of Washington. 2023. DART Adult Passage Graphics & Text. [<http://www.cbr.washington.edu/dart/query/adult_graph_text.>](http://www.cbr.washington.edu/dart/query/adult_graph_text.)
+
+
+![Coho salmon jumping up a waterfall near the Oregon Coast. Credit: *NOAA Fisheries, Paul Jeffrey*](or-coho-paul-jeffrey.jpg)
+
+![Map of Willamette Falls that includes fish ladder location and zoomed out view of the Willamette River. Credit: *Department of Defense*](Capture.PNG)
+
+## Setup 
+
+```{r setup, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+
+### attach packages
+library(here)
+library(tidyverse)
+library(janitor)
+library(tsibble)
+library(feasts)
+library(fable)
+
+### read in data
+fish <- read_csv(here("data", "willamette_fish_passage.csv")) %>%
+  replace(is.na(.), 0) %>%
+  clean_names() %>% 
+  select("date", "coho", "jack_coho", "steelhead")
+
+
+### have R read date as date, make it a tibble
+fish_ts <- fish %>% 
+  mutate(date = lubridate::mdy(date)) %>% 
+  as_tsibble(key = NULL, index = date)
+
+
+```
+
+## Original time series
+
+```{r}
+### want to make a plot with date on x axis and count of fish on y, so cleaning up the rows to do that
+fish_longer<- fish_ts %>%
+  pivot_longer(cols = 2:4, names_to = "species", values_to = "count") %>% 
+    mutate(species = case_when(
+    species == "coho" ~ "Coho",
+    species == "jack_coho" ~ "Jack Coho", 
+    species == "steelhead" ~ "Steelhead"))
+
+### make the plot
+ggplot(data = fish_longer, aes(x = date, y = count, color = species))+
+  geom_line(size = 0.75, alpha = 0.9)+
+  theme_minimal()+
+  labs(x = "Date",
+       y = "Number of fish",
+       title = "Number of Coho, Coho Jack, and Steelhead Salmon",
+       subtitle = "2001-01-01 to 2010-12-31")+
+  scale_color_manual(values = c("darkgreen", "salmon", "darkgray"))
+```
+
