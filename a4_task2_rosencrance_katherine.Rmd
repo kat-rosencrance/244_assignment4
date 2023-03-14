@@ -79,7 +79,6 @@ ggplot(data = fish_longer, aes(x = date, y = count, color = species))+
 ## Seasonplots
 
 ```{r}
-# organize by month for better visualization
 
 fish_longer %>% 
   gg_season(y = count, 

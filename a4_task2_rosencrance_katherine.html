@@ -540,9 +540,7 @@ seem to pass through Willamette Falls at a different time.</li>
 </div>
 <div id="seasonplots" class="section level2">
 <h2>Seasonplots</h2>
-<pre class="r"><code># organize by month for better visualization
-
-fish_longer %&gt;% 
+<pre class="r"><code>fish_longer %&gt;% 
   gg_season(y = count, 
             pal = c(&quot;darkgreen&quot;, &quot;salmon&quot;, &quot;darkgray&quot;)) +
   theme_minimal() +
@@ -582,7 +580,7 @@ ggplot(data = fish_longer_annual, aes(x = year, y = annual_count, color = specie
 <p><strong>Figure 3.</strong> Annual counts of coho, jack coho, and
 steelhead salmon passing through Willemette Falls from 2000-2010.</p>
 <ul>
-<li>THe annual count of steelhead greatly outnumbers the total amount of
+<li>The annual count of steelhead greatly outnumbers the total amount of
 coho and jack coho, up until 2009.</li>
 <li>In 2009, the number of coho salmon drastically increases while the
 number of steelhead levels off a bit after fluctuating yearly in
